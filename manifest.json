@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "LinkedIn Job Notes",
+  "version": "1.0",
+  "description": "Add personal notes to LinkedIn job listings",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": ["https://*.linkedin.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.linkedin.com/jobs/*"],
+      "js": ["contentScript.js"],
+      "css": ["style.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

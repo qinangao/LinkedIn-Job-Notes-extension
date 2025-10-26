@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 400px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f5f5f5;
+}
+
+#container {
+  padding: 16px;
+}
+
+h3 {
+  color: #0a66c2;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+p {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+form {
+  margin-bottom: 12px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #0a66c2;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #004182;
+}
+
+#view-notes-btn {
+  background: #fff;
+  color: #0a66c2;
+  border: 1px solid #0a66c2;
+  margin-top: 8px;
+}
+
+#view-notes-btn:hover {
+  background: #f3f6f8;
+}
+
+#notes-container {
+  margin-top: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-item {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.note-header {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #000;
+}
+
+.note-content {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.note-actions a {
+  font-size: 12px;
+  color: #0a66c2;
+  text-decoration: none;
+  flex: 1;
+}
+
+.note-actions a:hover {
+  text-decoration: underline;
+}
+
+.delete-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  background: #dc3545;
+  width: auto;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+}
+
+.no-notes {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-size: 13px;
+}

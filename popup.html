@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LinkedIn Job Notes</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div id="container">
+      <h3>📝 LinkedIn Job Notes</h3>
+      <p>Add and manage notes for jobs you viewed.</p>
+      <form>
+        <input
+          type="text"
+          id="note-input"
+          placeholder="Add note for current job..."
+        />
+        <button type="submit" id="add-note-btn">Add Note</button>
+      </form>
+      <button id="view-notes-btn">View All Saved Notes</button>
+      <div id="notes-container"></div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
