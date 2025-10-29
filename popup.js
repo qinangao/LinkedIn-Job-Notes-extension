@@ -3,6 +3,31 @@ const viewNotesBtn = document.getElementById("view-notes-btn");
 const noteInput = document.getElementById("note-input");
 const notesContainer = document.getElementById("notes-container");
 const form = document.querySelector("form");
+const linkedinContent = document.getElementById("linkedin-content");
+const nonLinkedinContent = document.getElementById("non-linkedin-content");
+
+// Function to check if current tab is on LinkedIn
+function isLinkedInPage(url) {
+  return url && url.includes("linkedin.com");
+}
+
+// Function to toggle UI based on current page
+function toggleUI(isLinkedIn) {
+  if (isLinkedIn) {
+    linkedinContent.style.display = "block";
+    nonLinkedinContent.style.display = "none";
+  } else {
+    linkedinContent.style.display = "none";
+    nonLinkedinContent.style.display = "block";
+  }
+}
+
+// Check current page and update UI when popup opens
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  const currentUrl = tabs[0].url;
+  const isLinkedIn = isLinkedInPage(currentUrl);
+  toggleUI(isLinkedIn);
+});
 
 // Prevent form submission
 form.addEventListener("submit", (e) => {
@@ -61,7 +86,7 @@ function addNote() {
 
     chrome.storage.local.set(data, () => {
       noteInput.value = "";
-      alert(`Note saved for job ID: ${jobId}!\n\nNote: "${note}"`);
+      // alert(`Note saved for job ID: ${jobId}!\n\nNote: "${note}"`);
 
       // Auto-refresh the notes list if it's open
       if (notesContainer.innerHTML !== "") {
@@ -72,11 +97,19 @@ function addNote() {
 }
 
 // View all saved notes
+// View all saved notes (toggle open/close)
 viewNotesBtn.addEventListener("click", () => {
+  // If notes are currently visible, hide them
+  if (notesContainer.style.display === "block") {
+    notesContainer.style.display = "none";
+    viewNotesBtn.textContent = "View All Saved Notes";
+    return;
+  }
+
+  // Otherwise, show notes
   chrome.storage.local.get(null, (items) => {
     const jobNotes = [];
 
-    // Filter and organize notes
     Object.keys(items).forEach((key) => {
       if (
         key.startsWith("job_") &&
@@ -95,43 +128,39 @@ viewNotesBtn.addEventListener("click", () => {
     if (jobNotes.length === 0) {
       notesContainer.innerHTML =
         '<p class="no-notes">No notes saved yet.<br><br>Navigate to a LinkedIn job and add a note using the form above!</p>';
-      return;
+    } else {
+      jobNotes.sort((a, b) => {
+        const idA = parseInt(a.id.replace("job_", ""));
+        const idB = parseInt(b.id.replace("job_", ""));
+        return idB - idA;
+      });
+
+      let html = '<div class="notes-list">';
+      jobNotes.forEach((job) => {
+        html += `
+          <div class="note-item">
+            <div class="note-header"><strong>${escapeHtml(
+              job.title
+            )}</strong></div>
+            <div class="note-content">${escapeHtml(job.note)}</div>
+            <div class="note-actions">
+              ${
+                job.url
+                  ? `<a href="${escapeHtml(
+                      job.url
+                    )}" target="_blank">View Job</a>`
+                  : ""
+              }
+              <button class="button delete-btn" data-key="${escapeHtml(
+                job.id
+              )}">Delete</button>
+            </div>
+          </div>
+        `;
+      });
+      html += "</div>";
+      notesContainer.innerHTML = html;
     }
-
-    // Sort by most recent (assuming higher job IDs are newer)
-    jobNotes.sort((a, b) => {
-      const idA = parseInt(a.id.replace("job_", ""));
-      const idB = parseInt(b.id.replace("job_", ""));
-      return idB - idA;
-    });
-
-    // Display notes
-    let html = '<div class="notes-list">';
-    jobNotes.forEach((job) => {
-      html += `
-        <div class="note-item">
-          <div class="note-header">
-            <strong>${escapeHtml(job.title)}</strong>
-          </div>
-          <div class="note-content">${escapeHtml(job.note)}</div>
-          <div class="note-actions">
-            ${
-              job.url
-                ? `<a href="${escapeHtml(
-                    job.url
-                  )}" target="_blank">View Job</a>`
-                : ""
-            }
-            <button class="delete-btn" data-key="${escapeHtml(
-              job.id
-            )}">Delete</button>
-          </div>
-        </div>
-      `;
-    });
-    html += "</div>";
-
-    notesContainer.innerHTML = html;
 
     // Add delete handlers
     document.querySelectorAll(".delete-btn").forEach((btn) => {
@@ -141,12 +170,16 @@ viewNotesBtn.addEventListener("click", () => {
           chrome.storage.local.remove(
             [key, `${key}_title`, `${key}_url`],
             () => {
-              viewNotesBtn.click();
+              viewNotesBtn.click(); // Refresh notes
             }
           );
         }
       });
     });
+
+    // Finally, show the container
+    notesContainer.style.display = "block";
+    viewNotesBtn.textContent = "Hide Notes";
   });
 });
 
@@ -158,21 +191,10 @@ function escapeHtml(text) {
 
 // Auto-load notes on popup open
 window.addEventListener("load", () => {
-  // Check if we're on a job page and show helpful message
+  // Check current page and update UI
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const currentUrl = tabs[0].url;
-    if (currentUrl.includes("linkedin.com/jobs")) {
-      const jobId =
-        currentUrl.match(/\/jobs\/view\/(\d+)/) ||
-        currentUrl.match(/currentJobId=(\d+)/);
-      if (jobId) {
-        const storageKey = `job_${jobId[1]}`;
-        chrome.storage.local.get([storageKey], (result) => {
-          if (result[storageKey]) {
-            noteInput.placeholder = `Current note: "${result[storageKey]}"`;
-          }
-        });
-      }
-    }
+    const isLinkedIn = isLinkedInPage(currentUrl);
+    toggleUI(isLinkedIn);
   });
 });
