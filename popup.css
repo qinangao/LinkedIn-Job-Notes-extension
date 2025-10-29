@@ -20,7 +20,7 @@ body {
 
 #container {
   padding: 1.2rem;
-  background: white;
+  background: #fffefa;
 }
 
 h1 {
@@ -69,7 +69,9 @@ input[type="text"]:focus {
   border-color: var(--light-blue);
 }
 
-button {
+button,
+.button {
+  display: inline-block;
   width: 100%;
   padding: 10px;
   background: var(--secondary);
@@ -79,12 +81,16 @@ button {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
   transition: 0.3s;
 }
 
-button:hover {
+button:hover,
+.button:hover {
   background: var(--primary);
   color: var(--secondary);
+  transform: translateY(-2px);
 }
 
 #view-notes-btn {
@@ -150,11 +156,13 @@ button:hover {
   padding: 6px 12px;
   font-size: 12px;
   background: var(--pink);
+  color: var(--light-yellow);
   width: auto;
 }
 
 .delete-btn:hover {
   background: var(--red);
+  color: white;
 }
 
 .no-notes {
@@ -162,4 +170,31 @@ button:hover {
   color: #999;
   padding: 20px;
   font-size: 13px;
+}
+
+/* Go to LinkedIn section */
+.go-to-linkedin {
+  text-align: center;
+  padding: 1rem;
+}
+
+.go-to-linkedin h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-style: normal;
+}
+
+.go-to-linkedin p {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.linkedin-link {
+  background: var(--primary);
+  color: var(--secondary);
+}
+.linkedin-link:hover {
+  background: var(--secondary);
+  color: var(--primary);
 }
